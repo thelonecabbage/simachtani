@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="SimchataniApp">
+
+<head>
+    <title></title>
+    <meta name="viewport" content="initial-scale=1" />
+    <script src="/bower_components/angular/angular.js"></script>
+<!--     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-messages.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js"></script> -->
+    <script src="/bower_components/ui-router/release/angular-ui-router.js"></script>
+    <script src="/bower_components/angular-aria/angular-aria.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/angular-material/angular-material.js"></script>
+    <script src="/js/app.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" type="text/css" href="/bower_components/angular-material/angular-material.layouts.css">
+    <link rel="stylesheet" type="text/css" href="/bower_components/angular-material/angular-material.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.gitcdn.xyz/cdn/angular/bower-material/v1.0.0-rc2/angular-material.css"> -->
+</head>
+<style type="text/css">
+    .menuBardemoBasicUsage .page-container {
+  background-color: #f1f1f1;
+  padding: 32px; }
+.menuBardemoBasicUsage .page {
+  margin: 0 auto;
+  background-color: white;
+  padding: 24px;
+  max-width: 680px;
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.25); }
+.menuBardemoBasicUsage .page h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-top: 0;
+  font-weight: normal; }
+.menuBardemoBasicUsage .page p {
+  line-height: 1.6rem; }
+
+</style>
+<body layout="column" ng-controller="AppController as ctrl">
+    <div ng-include="'/modules/menu-top/menu.html'"></div>
+{{'hello world'}}
+</body>
+
+</html>
