@@ -2,12 +2,12 @@
     <div class="md-toolbar-tools">
         <h2 class="md-flex" layout="row">
             <md-select ng-model="content.selected_book">
-                <md-option ng-repeat="book in content.book_list" value="{{$index}}">
-                  {{book.title}}:<span class="font-alef">{{book.heTitle}}</span>
+                <md-option ng-repeat="book in content.library['Torah']" value="{{book.name}}">
+                  {{book.name}}:<span class="font-alef">{{book.nameHe}}</span>
                 </md-option>
             </md-select>
             <md-select ng-model="content.selected_chapter">
-                <md-option ng-repeat="texts in content.book.text" value="{{$index}}">
+                <md-option ng-repeat="verses in content.book_info.chapters_count|range" value="{{$index}}">
                   {{$index+1|hebnum}}:{{$index+1}}
                 </md-option>
             </md-select>
@@ -22,16 +22,14 @@
             </md-card-title-text> -->
         </md-card-title>
         <md-content class="verses font-alef rtl" ng-click="content.word_click($event, $index)" style="outline: 0;">
-            <div class="verse" ng-repeat="(verse_id, verse) in content.book.text[content.selected_chapter]">
-                    <div class="li-he-num" title="{{$index+1}}">{{$index+1|hebnum}}</div>
+            <div class="verse"
+                 ng-repeat="verse in content.book"
+                 ng-class="{'highlight': (verse.book === content.selected_book && verse.chapter === content.selected_chapter && verse.verse === content.selected_verse)}">
+                    <div class="li-he-num" title="{{$index+1}}">{{verse.verse+1|hebnum}}</div>
                     <div>
                         <div class="li-he-item">
-                            <span class="he-word" ng-repeat="(word_id, word) in verse track by $index">{{word}}</span>
-
+                            <span class="he-word" ng-repeat="(word_id, word) in verse.nikud track by $index">{{word}}</span>
                         </div>
-                        <md-tooltip md-direction="bottom" md-delay="1500" class="ltr large">
-                              {{content.book_en.text[content.selected_chapter][verse_id]||'missing'}}
-                        </md-tooltip>
                     </div>
             </div>
         </md-content>
@@ -68,12 +66,28 @@
                 </div>
                 <md-divider></md-divider>
             </div>
+            <div ng-if="content.concordance.length">
+                <h3>
+                Word found in:
+            </h3>
+                <md-divider></md-divider>
+                <div class="definitions concordance">
+                    <div class="def_line def he-word"
+                         ng-repeat="inst in content.concordance"
+                         ng-click="content.selected_book=inst.book;content.selected_chapter=inst.chapter;content.selected_verse=inst.verse;">
+                        <div style="display:inline-block;">{{inst.book}}:<span class="rtl font-aleph">{{inst.book_he}}</span></div>
+                        {{inst.chapter+1}}:{{inst.verse+1}}
+                    </div>
+                </div>
+                <md-divider></md-divider>
+            </div>
         </md-content>
     </md-card>
 </md-content>
 <style>
-#vertical-content-container {
-    /*height: 90vh;*/
+#vertical-content-container .highlight {
+    background: rgba(255, 255, 0, 0.43);
+    border-radius: 5px;
 }
 
 #vertical-content-container .md-virtual-repeat-scroller {
@@ -98,8 +112,8 @@
     display: block;
 }
 
-..definitions .def_line {
-    paddig-bottom: .25em;
+.definitions .def_line {
+    padding-bottom: .25em;
 }
 
 .definitions label {
@@ -127,6 +141,9 @@
 .definitions .def_block {
     display: block;
     padding-left: 4em;
+}
+.concordance .def_line {
+    display: block;
 }
 
 .h-link {

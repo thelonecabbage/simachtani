@@ -1,53 +1,34 @@
 (function (app) {
 
-  app.controller('textDisplayCtrl', function (book, book_en, $http, $scope, $sce) {
+  app.controller('textDisplayCtrl', function (book, library, $http, Restangular, $scope, $sce) {
     var that = this;
     this.page_size = 5;
-    this.book = book.data;
-    this.book_en = book_en.data;
+    this.book = book;
+    this.library = library.data;
     this.word = '';
-    this.book_list = [
-      {
-        title:"Genesis",
-        heTitle:"בראשית",
-        file: "Tanach/Torah/Genesis/"
-      },
-      {
-        title:"Exodus",
-        heTitle:"שמות",
-        file: "Tanach/Torah/Exodus/"
-      },
-      {
-        title:"Leviticus",
-        heTitle:"ויקרא",
-        file: "Tanach/Torah/Leviticus/"
-      },
-      {
-        title:"Numbers",
-        heTitle:"במדבר",
-        file: "Tanach/Torah/Numbers/"
-      },
-      {
-        title:"Deuteronomy",
-        heTitle:"דברים",
-        file: "Tanach/Torah/Deuteronomy/"
-      },
-    ];
-    this.selected_book = 0;
-    this.selected_chapter = 0;
+
+    this.selected_book = this.book[0].book;
+    this.selected_chapter = this.book[0].chapter;
+    this.selected_verse = -1;
+
+    function getBook(collection, book) {
+      for (var i in that.library[collection]) {
+        if (that.library[collection][i]['name'] === book) {
+          return that.library[collection][i];
+        }
+      }
+    }
 
     function versesToWord(texts) {
-      angular.forEach(texts, function (chapter) {
-        angular.forEach(chapter, function (verse, verse_id) {
-          if (!verse) {
-            return;
-          }
-          chapter[verse_id] = verse.match(/[^\s]+/g);
-        });
+      angular.forEach(texts, function (verse, verse_id) {
+        if (!verse) {
+          return;
+        }
+        verse.nikud = verse.nikud.match(/[^\s]+/g);
       });
       return texts;
     }
-    this.book.text = versesToWord(this.book.text);
+    this.book = versesToWord(this.book);
 
     this.word_click = function (ev, chapter) {
       if (ev.srcElement.classList.contains('he-word')) {
@@ -143,28 +124,52 @@
       });
       return promise;
     }
+
+    function search_concordance(word) {
+      Restangular.all('concordance').getList({
+        q: {
+          search: that.blinikud(word)
+        },
+        'results_per_page': 500
+      }).then(function (result) {
+        that.concordance = result;
+      })
+
+    }
+
     $scope.$watch('content.word', function (o, n) {
       var word = that.word;
       that.strongs_dict = [];
       that.word_forms = [];
+      that.concordance = [];
       if (!word) {
         return;
       }
       search_without_nikud(word);
       search_word_forms(word);
+      search_concordance(word);
     });
     $scope.$watch('content.selected_book', function (o, n) {
-      if (parseInt(o)!==parseInt(n)) {
-        var p = $http.get('/json/' + that.book_list[that.selected_book].file +'Hebrew/Tanach with Nikkud.json');
-        p.then(function(response) {
-          that.book = response.data;
-          that.book.text = versesToWord(that.book.text);
-          that.selected_chapter = 0;
-        });
-        var p2 = $http.get('/json/' + that.book_list[that.selected_book].file +'English/merged.json');
-        p2.then(function(response) {
-          that.book_en = response.data;
-        });
+      that.book_info = getBook('Torah', that.selected_book);
+      if (o !== n) {
+        _.find(that.book.reqParams.q.filters, {
+          name: 'book'
+        }).val = that.selected_book;
+        that.book.refresh_from_server().then(function (result) {
+          versesToWord(that.book);
+          return result;
+        })
+      }
+    });
+    $scope.$watch('content.selected_chapter', function (o, n) {
+      if (o !== n) {
+        _.find(that.book.reqParams.q.filters, {
+          name: 'chapter'
+        }).val = that.selected_chapter;
+        that.book.refresh_from_server().then(function (result) {
+          versesToWord(that.book);
+          return result;
+        })
       }
     });
 
@@ -177,7 +182,7 @@
     this.joinlist = function (list) {
       return list.join(', ');
     }
-    this.parseInt = function(num) {
+    this.parseInt = function (num) {
       return parseInt(num);
     }
   });

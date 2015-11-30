@@ -19,4 +19,14 @@
       return myHebrewNumber;
     };
   });
+  app.filter('range', function () {
+    return function (total) {
+      var input = [];
+      total = Math.ceil(total);
+      for (var i = 0; i < total; i++) {
+        input.push(i);
+      }
+      return input;
+    };
+  });
 }(window.simchatani));

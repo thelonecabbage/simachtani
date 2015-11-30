@@ -38,6 +38,7 @@ class SourceTexts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     collection = db.Column(db.Unicode, nullable=False, index=True)
     book = db.Column(db.Unicode, nullable=False, index=True)
+    book_he = db.Column(db.Unicode, nullable=True, index=False)
     chapter = db.Column(db.Integer, nullable=False, index=True)
     verse = db.Column(db.Integer, nullable=False, index=True)
 
@@ -56,15 +57,17 @@ class SourceTexts(db.Model):
         library = {}
         collections = [i[0] for i in db.session.query(cls.collection).distinct()]
         for collection in collections:
-            books = {}
+            books = []
             library[collection] = books
-            book_list = [i[0] for i in db.session.query(cls.book).filter_by(collection=collection).distinct()]
-            for book_name in book_list:
-                books[book_name] = {
+            book_list = db.session.query(cls.book, cls.book_he).filter_by(collection=collection).distinct()
+            for book_name, book_name_he in book_list:
+                books.append({
+                    'name': book_name,
+                    'nameHe': book_name_he,
                     'chapters_count': db.session.query(cls.chapter).filter_by(
                         collection=collection,
                         book=book_name).distinct().count()
-                }
+                })
         return library
 # Create the database tables.
 db.create_all()
@@ -128,6 +131,7 @@ def init_source_texts():
                     db.session.add(SourceTexts(
                         collection='Torah',
                         book=book,
+                        book_he=data.get('heTitle', ''),
                         chapter=chapter_id,
                         verse=verse_id,
                         nikud=verse,

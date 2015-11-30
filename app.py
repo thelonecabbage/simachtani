@@ -29,7 +29,7 @@ manager.create_api(WordForms, methods=['GET'])
 manager.create_api(SourceTexts, methods=['GET'], preprocessors={'GET_MANY': [pre_get_many_sources], },)
 manager.create_api(SourceTexts,
                    collection_name='concordance',
-                   include_columns=['id', 'collection', 'book', 'chapter', 'verse'],
+                   include_columns=['id', 'collection', 'book', 'book_he', 'chapter', 'verse'],
                    methods=['GET'],
                    preprocessors={'GET_MANY': [pre_get_many_sources], },)
 
