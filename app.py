@@ -27,6 +27,11 @@ manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(StrongsDict, methods=['GET'])
 manager.create_api(WordForms, methods=['GET'])
 manager.create_api(SourceTexts, methods=['GET'], preprocessors={'GET_MANY': [pre_get_many_sources], },)
+manager.create_api(SourceTexts,
+                   collection_name='concordance',
+                   include_columns=['id', 'collection', 'book', 'chapter', 'verse'],
+                   methods=['GET'],
+                   preprocessors={'GET_MANY': [pre_get_many_sources], },)
 
 
 @app.route('/', defaults={'path': ''})
@@ -39,7 +44,6 @@ def catch_all(path):
 
 @app.route('/api/library', methods=['GET'])
 def library():
-
     return Response(response=json.dumps(SourceTexts.get_library()),
                     status=200,
                     mimetype="application/json")
