@@ -12,13 +12,20 @@
     <script src="/bower_components/angular-aria/angular-aria.js"></script>
     <script src="/bower_components/angular-animate/angular-animate.js"></script>
     <script src="/bower_components/angular-material/angular-material.js"></script>
+    <script src="/bower_components/restangular/dist/restangular.js"></script>
+    <script src="/bower_components/lodash/lodash.js"></script>
     <script src="/js/app.js" type="text/javascript"></script>
+    <script src="/js/router.js" type="text/javascript"></script>
+    <script src="/js/filters.js" type="text/javascript"></script>
+
+    <script src="/modules/text-display/controller.js" type="text/javascript"></script>
 
     <link rel="stylesheet" type="text/css" href="/bower_components/angular-material/angular-material.layouts.css">
     <link rel="stylesheet" type="text/css" href="/bower_components/angular-material/angular-material.css">
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.gitcdn.xyz/cdn/angular/bower-material/v1.0.0-rc2/angular-material.css"> -->
 </head>
 <style type="text/css">
+@import url(http://fonts.googleapis.com/earlyaccess/alefhebrew.css);
     .menuBardemoBasicUsage .page-container {
   background-color: #f1f1f1;
   padding: 32px; }
@@ -36,10 +43,39 @@
 .menuBardemoBasicUsage .page p {
   line-height: 1.6rem; }
 
+.rtl {
+    direction: rtl;
+}
+.ltr {
+    direction: ltr;
+}
+.he-word {
+    display:inline-block;
+    padding-right: .25em;
+    padding-left: .25em;
+}
+.he-word:hover {
+    background-color: #111;
+    color:#EEE;
+    border-radius: 2px;
+    cursor: pointer;
+}
+li.verse {
+    margin-bottom: .5em;
+}
+.font-alef {
+     font-family: "Alef Hebrew",
+               “Helvetica Neue”,
+               Helvetica,
+               Arial,
+               sans-serif;
+}
+
 </style>
 <body layout="column" ng-controller="AppController as ctrl">
-    <div ng-include="'/modules/menu-top/menu.html'"></div>
-    <div ng-include="'/modules/text-display/content.html'"></div>
+    <!-- <div ng-include="'/modules/menu-top/menu.html'"></div> -->
+    <div ui-view></div>
+    <!-- <div ng-include="'/modules/text-display/content.html'"></div> -->
 </body>
 
 </html>

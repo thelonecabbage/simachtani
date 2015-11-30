@@ -1,5 +1,11 @@
-var app = angular.module('SimchataniApp', ['ngMaterial','ngAnimate','ui.router']);
+window.simchatani = angular.module('SimchataniApp', [
+'ngMaterial',
+'ngAnimate',
+// 'ngSanitize',
+// 'restangular',
+'ui.router']);
 
+(function(app){
 app.controller('AppController', function($mdSidenav) {
   var vm = this;
 
@@ -45,3 +51,4 @@ app.config(function($mdIconProvider) {
       }).join(seperator);
     };
   })
+}(window.simchatani));

@@ -1,9 +1,157 @@
- <md-toolbar class="md-info">
+<md-toolbar class="md-info">
     <div class="md-toolbar-tools">
-      <h2 class="md-flex">Toolbar: md-warn</h2>
+        <h2 class="md-flex" layout="row">
+            <md-select ng-model="content.selected_book">
+                <md-option ng-repeat="book in content.book_list" value="{{$index}}">
+                  {{book.title}}:<span class="font-alef">{{book.heTitle}}</span>
+                </md-option>
+            </md-select>
+            <md-select ng-model="content.selected_chapter">
+                <md-option ng-repeat="texts in content.book.text" value="{{$index}}">
+                  {{$index+1|hebnum}}:{{$index+1}}
+                </md-option>
+            </md-select>
+        </h2>
     </div>
-  </md-toolbar>
-  <md-content flex layout-padding>
+</md-toolbar>
+<md-content layout-padding layout="row" style="position:absolute;left:0;top:0;height:100vh;width:100%;padding-top:64px;">
+    <md-card id="vertical-content-container" flex="{{content.word ? 66:100}}">
+        <md-card-title>
+            <!-- <md-card-title-text>
+                <span class="md-headline">{{content.book.sectionNames[0]}} {{(content.parseInt(content.selected_chapter) + 1)|hebnum}}</span>
+            </md-card-title-text> -->
+        </md-card-title>
+        <md-content class="verses font-alef rtl" ng-click="content.word_click($event, $index)" style="outline: 0;">
+            <div class="verse" ng-repeat="(verse_id, verse) in content.book.text[content.selected_chapter]">
+                    <div class="li-he-num" title="{{$index+1}}">{{$index+1|hebnum}}</div>
+                    <div>
+                        <div class="li-he-item">
+                            <span class="he-word" ng-repeat="(word_id, word) in verse track by $index">{{word}}</span>
 
-  blah blah blah
-  </md-content>
+                        </div>
+                        <md-tooltip md-direction="bottom" md-delay="1500" class="ltr large">
+                              {{content.book_en.text[content.selected_chapter][verse_id]||'missing'}}
+                        </md-tooltip>
+                    </div>
+            </div>
+        </md-content>
+    </md-card>
+    <md-card flex class="" ng-show="content.word" md-auto-shrink>
+        <md-card-title class="font-alef rtl">
+            <md-card-title-text>
+                <span class="md-headline">{{content.word}}</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-content class="definitions">
+            <h3 ng-if="content.strongs_dict.length">
+                Strong's Concordance:
+            </h3>
+            <div ng-repeat="def in content.strongs_dict">
+                <md-divider xmd-inset></md-divider>
+                <div class="def_line nikud rtl"><span class="title">{{def.nikud}}</span><small>({{def.id}})</small></div>
+                <div class="def_line pron" ng-if="def.pronunciation">
+                    <label>pron.</label><span class="def_block">{{def.pronunciation}}</span></div>
+                <div class="def_line def" ng-if="def.strongs_def">
+                    <label>def.</label><span class="def_block">{{def.strongs_def}}</span></div>
+                <div class="def_line def" ng-if="def.strongs_def">
+                    <label>kjv def.</label><span class="def_block">{{def.kjv_def}}</span></div>
+                <div class="def_line derivation" ng-if="def.derivation" ng-click="content.hlink_click($event)">
+                    <label>root.</label><span class="def_block" ng-bind-html="def.derivation"></span></div>
+            </div>
+            <div ng-if="content.word_forms.length">
+                <h3>
+                Related Word Forms:
+            </h3>
+                <md-divider></md-divider>
+                <div class="word_forms rtl" ng-click="content.word_click($event, $index)">
+                    <span class="he-word" ng-repeat="word_form in content.word_forms">{{word_form}}</span>
+                </div>
+                <md-divider></md-divider>
+            </div>
+        </md-content>
+    </md-card>
+</md-content>
+<style>
+#vertical-content-container {
+    /*height: 90vh;*/
+}
+
+#vertical-content-container .md-virtual-repeat-scroller {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#vertical-content-container .repeated-chapter {
+    /*height:352px;*/
+}
+
+#vertical-content-container .repeated-chapter .verses {
+    height: 320px;
+}
+
+.definitions {
+    font-size: 12px;
+    position: relative;
+    display: block;
+}
+
+..definitions .def_line {
+    paddig-bottom: .25em;
+}
+
+.definitions label {
+    float: left;
+    font-weight: heavy;
+    opacity: .8;
+    display: inline-block;
+    margin-right: .5em;
+}
+
+.definitions .nikud small {
+    opacity: .8;
+    /*float: right;*/
+    padding-right: .5em;
+}
+
+.definitions .nikud .title {
+    font-size: 14px;
+}
+
+.definitions .nikud .title:hover {
+    font-size: 18px;
+}
+
+.definitions .def_block {
+    display: block;
+    padding-left: 4em;
+}
+
+.h-link {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+
+.word_forms {
+    font-size: 16px;
+}
+.li-he-num {
+    float: right;
+    display: inline-block;
+    direction: rtl;
+    opacity: .3;
+    font-weight: bold;
+}
+.li-he-item {
+    right:0;
+    padding-right: 1.5em;
+}
+md-tooltip.large .md-content {
+    white-space: inherit;
+    height:auto;
+    font-size:16px;
+}
+</style>
