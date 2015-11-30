@@ -3,6 +3,7 @@ import flask
 import flask.ext.sqlalchemy
 import flask.ext.restless
 from flask import Flask
+import flask.ext.whooshalchemy as whooshalchemy
 
 basedir = os.path.dirname(os.path.realpath(__file__))
 

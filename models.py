@@ -51,6 +51,21 @@ class SourceTexts(db.Model):
             chapter=self.chapter,
             verse=self.verse,)
 
+    @classmethod
+    def get_library(cls):
+        library = {}
+        collections = [i[0] for i in db.session.query(cls.collection).distinct()]
+        for collection in collections:
+            books = {}
+            library[collection] = books
+            book_list = [i[0] for i in db.session.query(cls.book).filter_by(collection=collection).distinct()]
+            for book_name in book_list:
+                books[book_name] = {
+                    'chapters_count': db.session.query(cls.chapter).filter_by(
+                        collection=collection,
+                        book=book_name).distinct().count()
+                }
+        return library
 # Create the database tables.
 db.create_all()
 whooshalchemy.whoosh_index(config.app, SourceTexts)
