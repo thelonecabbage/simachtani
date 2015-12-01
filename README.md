@@ -1,2 +1,2 @@
-# Simchatani
+# Simachtani
 Torah concordance (hebrew/english)
