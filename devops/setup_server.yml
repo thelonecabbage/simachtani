@@ -26,6 +26,11 @@
         - git-core
         - subversion
         - nginx
+        - node
+        - npm
+
+    - name: install bower
+      action: npm install bower -g
 
     - name: install pip
       action: easy_install name=pip
