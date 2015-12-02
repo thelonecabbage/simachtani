@@ -36,8 +36,14 @@
     - name: link nginx config
       action: file src=/etc/nginx/sites-available/{{app_name}}.conf dest=/etc/nginx/sites-enabled/{{app_name}}.conf state=link
 
+    - name: update db
+      action: script  {{webapps_dir}}/{{app_name}}/src/www/json/update.sh creates={{webapps_dir}}/{{app_name}}/src/www/json/Tanach
+
     - name: start app
       action: supervisorctl name={{app_name}} state=started
+      notify:
+        - restart app
+        - restart app
 
   handlers:
     - name: restart app

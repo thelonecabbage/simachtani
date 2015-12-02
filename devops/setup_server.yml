@@ -30,7 +30,7 @@
         - npm
 
     - name: install bower
-      action: npm install bower -g
+      npm: name=bower global=yes
 
     - name: install pip
       action: easy_install name=pip

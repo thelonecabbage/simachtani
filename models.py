@@ -87,6 +87,7 @@ def force_decode(string, codecs=['latin_1', 'cp857', 'cp866', 'cp1252', 'cp855',
 
 
 def init_wordforms():
+    WordForms.query.delete()
     with open('www/json/word_forms.csv', 'rb') as csvfile:
         for row in csv.reader(csvfile, delimiter=',', quotechar='"'):
             db.session.add(WordForms(
@@ -98,6 +99,7 @@ def init_wordforms():
 
 
 def init_strongsdict():
+    StrongsDict.query.delete()
     with open('www/json/strongs-hebrew-dictionary.json', 'rb') as jsonfile:
         strongs = json.load(jsonfile)
         for key, val in strongs.iteritems():
@@ -123,6 +125,7 @@ def init_strongsdict():
 
 
 def init_source_texts():
+    SourceTexts.query.delete()
     for book in ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy']:
         with open('www/json/Tanach/Torah/{0}/Hebrew/Tanach with Nikkud.json'.format(book), 'rb') as source_he:
             data = json.load(source_he)
@@ -138,3 +141,8 @@ def init_source_texts():
                         text=re.sub(u'[^\u05D0-\u05FF ]', '', verse),
                     ))
     db.session.commit()
+
+if __name__ == '__main__':
+    init_wordforms()
+    init_strongsdict()
+    init_source_texts()
