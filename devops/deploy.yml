@@ -47,8 +47,8 @@
 
     - name: update db
       action: script {{webapps_dir}}/{{app_name}}/src/www/json/update.sh creates={{webapps_dir}}/{{app_name}}/src/www/json/Tanach
-      # action: script {{webapps_dir}}/{{app_name}}/src/models.py
-      action: shell source {{webapps_dir}}/{{app_name}}/venv/bin/activate; python {{webapps_dir}}/{{app_name}}/src/models.py --chdir={{webapps_dir}}/{{app_name}}/src
+      action: script {{webapps_dir}}/{{app_name}}/src/updatedb.sh --chdir={{webapps_dir}}/{{app_name}}/src
+      # shell: source {{webapps_dir}}/{{app_name}}/venv/ python {{webapps_dir}}/{{app_name}}/src/models.py --chdir={{webapps_dir}}/{{app_name}}/src
       sudo: False
 
     - name: start app
