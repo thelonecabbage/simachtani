@@ -26,7 +26,7 @@
         - git-core
         - subversion
         - nginx
-        - node
+        - nodejs-legacy
         - npm
 
     - name: install bower
@@ -41,6 +41,21 @@
         - virtualenv
         - supervisor
         - uwsgi
+
+    - group: name=deploy state=present
+    - name: create a deployment user
+      user: name=deploy
+            state=present
+            groups="sudo,deploy"
+
+    - authorized_key: user=deploy key="{{lookup('file', '~/.ssh/id_rsa.pub')}}"
+
+    - name: adds passwordless commands to sudo
+      action: lineinfile dest=/etc/sudoers regexp="^deploy" line="deploy ALL=(ALL) NOPASSWD:ALL" state=present
+
+    - name: Disallow password authentication
+      action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+      action: service name=ssh state=restarted
 
     - name: symlink imaging library files
       action: file src=/usr/lib/x86_64-linux-gnu/libfreetype.so dest=/usr/lib/libfreetype.so state=link

@@ -1,7 +1,7 @@
 ---
 
 - hosts: webservers
-  user: root
+  user: deploy
   sudo: True
 
   vars:
@@ -15,13 +15,22 @@
 
   tasks:
     - name: ensure log directory
-      action: file dest={{webapps_dir}}/{{app_name}}/log state=directory
+      action: file dest={{webapps_dir}}/{{app_name}}/log group=deploy mode="u=rwx,g=rwx,o=rx"  state=directory
 
     - name: deploy code from repository
       action: git repo={{repo_url}} dest={{webapps_dir}}/{{app_name}}/src remote={{repo_remote}} version={{repo_version}}
+      sudo: False
 
     - name: install dependencies into virtualenv
       action: pip requirements={{webapps_dir}}/{{app_name}}/src/requirements.txt virtualenv={{webapps_dir}}/{{app_name}}/venv state=present
+
+    - name: remove bower package dependencies
+      action: file dest={{webapps_dir}}/{{app_name}}/src/www/bower_components state=absent
+      sudo: False
+
+    # - name: bower package dependencies
+    #   bower: path={{webapps_dir}}/{{app_name}}/src/www state=present
+    #   sudo: True
 
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/{{app_name}}.ini
@@ -37,7 +46,10 @@
       action: file src=/etc/nginx/sites-available/{{app_name}}.conf dest=/etc/nginx/sites-enabled/{{app_name}}.conf state=link
 
     - name: update db
-      action: script  {{webapps_dir}}/{{app_name}}/src/www/json/update.sh creates={{webapps_dir}}/{{app_name}}/src/www/json/Tanach
+      action: script {{webapps_dir}}/{{app_name}}/src/www/json/update.sh creates={{webapps_dir}}/{{app_name}}/src/www/json/Tanach
+      # action: script {{webapps_dir}}/{{app_name}}/src/models.py
+      action: shell source {{webapps_dir}}/{{app_name}}/venv/bin/activate; python {{webapps_dir}}/{{app_name}}/src/models.py --chdir={{webapps_dir}}/{{app_name}}/src
+      sudo: False
 
     - name: start app
       action: supervisorctl name={{app_name}} state=started
