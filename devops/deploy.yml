@@ -10,7 +10,7 @@
     repo_remote: origin
     repo_version: master
     webapps_dir: /srv/webapps
-    wsgi_file: wsgi.py
+    wsgi_file: app.py
     wsgi_callable: app
 
   tasks:
@@ -24,13 +24,9 @@
     - name: install dependencies into virtualenv
       action: pip requirements={{webapps_dir}}/{{app_name}}/src/requirements.txt virtualenv={{webapps_dir}}/{{app_name}}/venv state=present
 
-    - name: remove bower package dependencies
-      action: file dest={{webapps_dir}}/{{app_name}}/src/www/bower_components state=absent
-      sudo: False
-
     # - name: bower package dependencies
     #   bower: path={{webapps_dir}}/{{app_name}}/src/www state=present
-    #   sudo: True
+    #   sudo: False
 
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/{{app_name}}.ini
@@ -46,16 +42,14 @@
       action: file src=/etc/nginx/sites-available/{{app_name}}.conf dest=/etc/nginx/sites-enabled/{{app_name}}.conf state=link
 
     - name: update db
-      action: script {{webapps_dir}}/{{app_name}}/src/www/json/update.sh creates={{webapps_dir}}/{{app_name}}/src/www/json/Tanach
-      action: script {{webapps_dir}}/{{app_name}}/src/updatedb.sh --chdir={{webapps_dir}}/{{app_name}}/src
-      # shell: source {{webapps_dir}}/{{app_name}}/venv/ python {{webapps_dir}}/{{app_name}}/src/models.py --chdir={{webapps_dir}}/{{app_name}}/src
-      sudo: False
+      command: sh {{webapps_dir}}/{{app_name}}/src/www/json/update.sh chdir={{webapps_dir}}/{{app_name}}/src/www/json/ creates={{webapps_dir}}/{{app_name}}/src/www/json/Tanach/Torah/Genesis/Hebrew/merged.json
+      command: sh {{webapps_dir}}/{{app_name}}/src/updatedb.sh chdir={{webapps_dir}}/{{app_name}}/src/
+      sudo: True
 
     - name: start app
       action: supervisorctl name={{app_name}} state=started
-      notify:
-        - restart app
-        - restart app
+      action: supervisorctl name={{app_name}} state=restarted
+      action: supervisorctl name={{app_name}} state=restarted
 
   handlers:
     - name: restart app

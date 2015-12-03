@@ -3,4 +3,5 @@ www/bower_components/
 test.db
 search.db
 whoosh_index
+devops/hosts
 *.pyc
