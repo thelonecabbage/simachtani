@@ -61,77 +61,13 @@
       }
     }
 
-    function search_strongs_dict(word) {
-      if(!word || !word.strongs_num) {
-        return;
-      }
-      var filter = {
-        "name": "snum",
-        "op": "eq",
-        "val": word.strongs_num
-      };
-      var promise = $http({
-        url: '/api/strongs_dict',
-        method: "GET",
-        params: {
-          q: {
-            "filters": [filter]
-          }
-        }
-      })
-      promise.then(function (result) {
-        angular.forEach(result.data.objects, function (entry) {
-          entry.derivation = updateHRefs(entry.derivation);
-          that.strongs_dict.push(entry)
-        });
-      });
-      return promise;
-    }
-
-    function search_word_forms(word) {
-      var filter = {
-        "name": "group_id",
-        "op": "eq",
-        "val": word.group_id
-      };
-      var promise = $http({
-        url: '/api/word_forms',
-        method: "GET",
-        params: {
-          q: {
-            "filters": [filter]
-          }
-        }
-      })
-      promise.then(function (result) {
-        that.word_forms = _.uniq(_.pluck(result.data.objects, 'nikud'));
-      });
-
-      return promise;
-    }
-
-    function search_concordance(word) {
-      Restangular.all('concordance').getList({
-        q: {
-          search: that.blinikud(word)
-        },
-        'results_per_page': 500
-      }).then(function (result) {
-        that.concordance = result;
-      })
-
-    }
-
     $scope.$watch('content.word', function (o, n) {
       if (!that.word) {
         return;
       }
       Restangular.all('words').get(that.word.id).then(function (result) {
          that.word.info = result;
-      })
-      // search_strongs_dict(that.word);
-      // search_word_forms(that.word);
-      // search_concordance(that.word);
+      });
     });
     $scope.$watch('content.selected', function (o, n) {
       that.book_info = getBook('Torah', that.selected.book);
@@ -145,23 +81,6 @@
         that.book.refresh_from_server();
       }
     }, true);
-    // $scope.$watch('content.selected_book', function (o, n) {
-    //   that.book_info = getBook('Torah', that.selected_book);
-    //   if (o !== n) {
-    //     _.find(that.book.reqParams.q.filters, {
-    //       name: 'book'
-    //     }).val = that.selected_book;
-    //     that.book.refresh_from_server();
-    //   }
-    // });
-    // $scope.$watch('content.selected_chapter', function (o, n) {
-    //   if (o !== n) {
-    //     _.find(that.book.reqParams.q.filters, {
-    //       name: 'chapter'
-    //     }).val = that.selected_chapter;
-    //     that.book.refresh_from_server();
-    //   }
-    // });
 
     this.blinikud = function (word) {
       if (!word) {

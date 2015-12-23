@@ -21,8 +21,7 @@ var source_scripts = [
   './js/app.js',
   './js/router.js',
   './js/filters.js',
-  './modules/text-display/controller.js',
-  './dist/all.js'
+  './modules/text-display/controller.js'
 ];
 
 gulp.task('default', ['style', 'scripts']);
