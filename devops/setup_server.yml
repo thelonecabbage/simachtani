@@ -48,7 +48,7 @@
             state=present
             groups="sudo,deploy"
 
-    - authorized_key: user=deploy key="{{lookup('file', '~/.ssh/id_rsa.pub')}}"
+    - authorized_key: user=deploy key="{{lookup('file', '~/.ssh/id_rsa.pub')}}" state=present
 
     - name: adds passwordless commands to sudo
       action: lineinfile dest=/etc/sudoers regexp="^deploy" line="deploy ALL=(ALL) NOPASSWD:ALL" state=present

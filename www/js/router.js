@@ -3,10 +3,10 @@
   app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
     function ($urlRouterProvider, $stateProvider, $locationProvider) {
       $locationProvider.html5Mode(false);
-      $urlRouterProvider.otherwise('/torah');
+      $urlRouterProvider.otherwise('/torah/');
       $stateProvider.
       state('main_ui', {
-        url: '/torah',
+        url: '/torah/',
         //         abstract: false,
         templateUrl: '/modules/text-display/content.html?cache=' + Math.random(),
         resolve: {

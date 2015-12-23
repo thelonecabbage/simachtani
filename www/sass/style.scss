@@ -1,0 +1,182 @@
+@import '../bower_components/angular-material/angular-material.scss';
+@import 'angular-material.scss';
+
+.menuBardemoBasicUsage {
+    .page-container {
+        background-color: #f1f1f1;
+        padding: 32px;
+    }
+    .page {
+        margin: 0 auto;
+        background-color: white;
+        padding: 24px;
+        max-width: 680px;
+        box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.25);
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-top: 0;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.6rem;
+        }
+    }
+}
+
+.rtl {
+    direction: rtl;
+}
+
+.ltr {
+    direction: ltr;
+}
+.hebrew-hover {
+    &:hover {
+            background-color: #111;
+            color: #EEE;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+}
+.hebrew-de-emphasis {
+  color: #999;
+  font-weight: 100;
+}
+.he-word {
+    color: #222;
+    display: inline-block;
+    padding-right: .25em;
+    padding-left: .25em;
+}
+
+body.click-all-words {
+    .he-word {
+        @extend .hebrew-hover;
+    }
+}
+
+body.click-strong-words {
+    .he-word {
+        @extend .hebrew-de-emphasis;
+        &.strong {
+            @extend .hebrew-hover;
+            color: #222;
+            font-weight: normal;
+            &:hover {
+                /*color:#222;  */
+            }
+        }
+    }
+}
+
+body.click-verbs {
+    .he-word {
+        @extend .hebrew-de-emphasis;
+        &.verb {
+            @extend .hebrew-hover;
+            color: #222;
+            font-weight: bold;
+            &:hover {
+                /*color:#222;  */
+            }
+        }
+    }
+}
+
+li.verse {
+    margin-bottom: .5em;
+}
+
+#vertical-content-container {
+    .highlight {
+        background: rgba(255, 255, 0, 0.43);
+        border-radius: 5px;
+    }
+    .md-virtual-repeat-scroller {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .repeated-chapter {
+        /*height:352px;*/
+        .verses {
+            height: 320px;
+        }
+    }
+}
+
+.definitions {
+    font-size: 12px;
+    position: relative;
+    display: block;
+    .def_line {
+        padding-bottom: .25em;
+    }
+    label {
+        float: left;
+        font-weight: heavy;
+        opacity: .8;
+        display: inline-block;
+        margin-right: .5em;
+    }
+    .nikud {
+        small {
+            opacity: .8;
+            /*float: right;*/
+            padding-right: .5em;
+        }
+        .title {
+            font-size: 14px;
+            &:hover {
+                font-size: 18px;
+            }
+        }
+    }
+    .def_block {
+        display: block;
+        padding-left: 4em;
+    }
+}
+
+.concordance .def_line {
+    display: block;
+}
+
+.h-link {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+
+.word_forms {
+    font-size: 16px;
+}
+
+.li-he-num {
+    float: right;
+    display: inline-block;
+    direction: rtl;
+    opacity: .3;
+    font-weight: bold;
+}
+
+.li-he-item {
+    right: 0;
+    padding-right: 1.5em;
+    padding-bottom: .5em;
+    line-height: 1.2em;
+}
+
+md-tooltip.large .md-content {
+    white-space: inherit;
+    height: auto;
+    font-size: 16px;
+}
+
+.he-word.hyphen {
+    padding: 0;
+    margin: 0 -0.25em;
+}

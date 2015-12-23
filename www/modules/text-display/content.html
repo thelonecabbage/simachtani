@@ -1,12 +1,12 @@
 <md-toolbar class="md-info">
     <div class="md-toolbar-tools">
         <h2 class="md-flex" layout="row">
-            <md-select ng-model="content.selected_book">
+            <md-select ng-model="content.selected.book">
                 <md-option ng-repeat="book in content.library['Torah']" value="{{book.name}}">
                   {{book.name}}:<span class="font-alef">{{book.nameHe}}</span>
                 </md-option>
             </md-select>
-            <md-select ng-model="content.selected_chapter">
+            <md-select ng-model="content.selected.chapter">
                 <md-option ng-repeat="verses in content.book_info.chapters_count|range" value="{{$index}}">
                   {{$index+1|hebnum}}:{{$index+1}}
                 </md-option>
@@ -28,7 +28,11 @@
                     <div class="li-he-num" title="{{$index+1}}">{{verse.verse+1|hebnum}}</div>
                     <div>
                         <div class="li-he-item">
-                            <span class="he-word" ng-repeat="(word_id, word) in verse.nikud track by $index">{{word}}</span>
+                            <span ng-repeat="(word_id, word) in verse.words track by $index"
+                                  class="he-word"
+                                  data-word="{{word}}"
+                                  ng-class="{'hyphen': (word.word=='־'), 'verb': (word.pos=='v'), 'strong': word.strongs_num}">{{word.word}}</span>
+                            <span class="he-word hyphen">׃</span>
                         </div>
                     </div>
             </div>
@@ -37,32 +41,46 @@
     <md-card flex class="" ng-show="content.word" md-auto-shrink>
         <md-card-title class="font-alef rtl">
             <md-card-title-text>
-                <span class="md-headline">{{content.word}}</span>
+                <span class="md-headline">{{content.word.word}}</span>
             </md-card-title-text>
         </md-card-title>
         <md-content class="definitions">
-            <h3 ng-if="content.strongs_dict.length">
-                Strong's Concordance:
-            </h3>
-            <div ng-repeat="def in content.strongs_dict">
-                <md-divider xmd-inset></md-divider>
-                <div class="def_line nikud rtl"><span class="title">{{def.nikud}}</span><small>({{def.id}})</small></div>
-                <div class="def_line pron" ng-if="def.pronunciation">
-                    <label>pron.</label><span class="def_block">{{def.pronunciation}}</span></div>
-                <div class="def_line def" ng-if="def.strongs_def">
-                    <label>def.</label><span class="def_block">{{def.strongs_def}}</span></div>
-                <div class="def_line def" ng-if="def.strongs_def">
-                    <label>kjv def.</label><span class="def_block">{{def.kjv_def}}</span></div>
-                <div class="def_line derivation" ng-if="def.derivation" ng-click="content.hlink_click($event)">
-                    <label>root.</label><span class="def_block" ng-bind-html="def.derivation"></span></div>
+            <div ng-if="content.simachtani_def">
+                <h3>
+                    Simachtani:
+                </h3>
+                <div>
+                    <md-divider xmd-inset></md-divider>
+                    <div class="def_line pron" ng-if="content.simachtani_def.binyan">
+                        <label>binyan</label><span class="def_block">{{content.simachtani_def.binyan}}</span></div>
+                    <div class="def_line def" ng-if="content.simachtani_def.shoresh">
+                        <label>shoresh</label><span class="def_block">{{content.simachtani_def.shoresh}}</span></div>
+                </div>
+            </div>
+            <div ng-if="content.strongs_dict">
+                <h3>
+                    Strong's Concordance:
+                </h3>
+                <div>
+                    <md-divider xmd-inset></md-divider>
+                    <div class="def_line nikud rtl"><span class="title">{{content.strongs_dict.nikud}}</span><small>({{content.word.strongs_num}})</small></div>
+                    <div class="def_line pron" ng-if="content.strongs_dict.pronunciation">
+                        <label>pron.</label><span class="def_block">{{content.strongs_dict.pronunciation}}</span></div>
+                    <div class="def_line def" ng-if="content.strongs_dict.strongs_def">
+                        <label>def.</label><span class="def_block">{{content.strongs_dict.strongs_def}}</span></div>
+                    <div class="def_line def" ng-if="content.strongs_dict.strongs_def">
+                        <label>kjv.</label><span class="def_block">{{content.strongs_dict.kjv_def}}</span></div>
+                    <div class="def_line derivation" ng-if="content.strongs_dict.derivation" ng-click="content.hlink_click($event)">
+                        <label>root.</label><span class="def_block">{{content.strongs_dict.derivation}}</span></div>
+                </div>
             </div>
             <div ng-if="content.word_forms.length">
                 <h3>
-                Related Word Forms:
-            </h3>
+                Forms:
+                </h3>
                 <md-divider></md-divider>
                 <div class="word_forms rtl" ng-click="content.word_click($event, $index)">
-                    <span class="he-word" ng-repeat="word_form in content.word_forms">{{word_form}}</span>
+                    <span class="he-word" ng-repeat="word_form in content.word_forms">{{word_form.nikud}}</span>
                 </div>
                 <md-divider></md-divider>
             </div>
@@ -85,90 +103,5 @@
     </md-card>
 </md-content>
 <style>
-#vertical-content-container .highlight {
-    background: rgba(255, 255, 0, 0.43);
-    border-radius: 5px;
-}
 
-#vertical-content-container .md-virtual-repeat-scroller {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-#vertical-content-container .repeated-chapter {
-    /*height:352px;*/
-}
-
-#vertical-content-container .repeated-chapter .verses {
-    height: 320px;
-}
-
-.definitions {
-    font-size: 12px;
-    position: relative;
-    display: block;
-}
-
-.definitions .def_line {
-    padding-bottom: .25em;
-}
-
-.definitions label {
-    float: left;
-    font-weight: heavy;
-    opacity: .8;
-    display: inline-block;
-    margin-right: .5em;
-}
-
-.definitions .nikud small {
-    opacity: .8;
-    /*float: right;*/
-    padding-right: .5em;
-}
-
-.definitions .nikud .title {
-    font-size: 14px;
-}
-
-.definitions .nikud .title:hover {
-    font-size: 18px;
-}
-
-.definitions .def_block {
-    display: block;
-    padding-left: 4em;
-}
-.concordance .def_line {
-    display: block;
-}
-
-.h-link {
-    text-decoration: underline;
-    color: blue;
-    cursor: pointer;
-}
-
-.word_forms {
-    font-size: 16px;
-}
-.li-he-num {
-    float: right;
-    display: inline-block;
-    direction: rtl;
-    opacity: .3;
-    font-weight: bold;
-}
-.li-he-item {
-    right:0;
-    padding-right: 1.5em;
-}
-md-tooltip.large .md-content {
-    white-space: inherit;
-    height:auto;
-    font-size:16px;
-}
 </style>

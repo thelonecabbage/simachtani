@@ -9,7 +9,10 @@ window.simchatani = angular.module('SimchataniApp', [
 (function (app) {
   app.controller('AppController', function ($mdSidenav) {
     var vm = this;
-
+    vm.clickable = {
+      strongs: 1,
+      verbs: 1
+    };
     vm.toggleSidenav = function (menuId) {
       $mdSidenav(menuId).toggle();
     };
