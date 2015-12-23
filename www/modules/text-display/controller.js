@@ -123,20 +123,11 @@
     }
 
     $scope.$watch('content.word', function (o, n) {
-      that.strongs_dict = {};
-      that.word_forms = [];
-      that.concordance = [];
-      that.simachtani_def = {};
       if (!that.word) {
         return;
       }
       Restangular.all('words').get(that.word.id).then(function (result) {
-        that.strongs_dict = result.strongs_def;
-        that.word_forms = result.wordforms;
-        that.concordance = result.verses;
-        that.simachtani_def = result.simachtani_def;
-        that.winfo = result;
-
+         that.word.info = result;
       })
       // search_strongs_dict(that.word);
       // search_word_forms(that.word);

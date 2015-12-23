@@ -45,53 +45,53 @@
             </md-card-title-text>
         </md-card-title>
         <md-content class="definitions">
-            <div ng-if="content.simachtani_def">
+            <div ng-if="content.word.info.simachtani_def">
                 <h3>
                     Simachtani:
                 </h3>
                 <div>
                     <md-divider xmd-inset></md-divider>
-                    <div class="def_line pron" ng-if="content.simachtani_def.binyan">
-                        <label>binyan</label><span class="def_block">{{content.simachtani_def.binyan}}</span></div>
-                    <div class="def_line def" ng-if="content.simachtani_def.shoresh">
-                        <label>shoresh</label><span class="def_block">{{content.simachtani_def.shoresh}}</span></div>
+                    <div class="def_line pron" ng-if="content.word.info.simachtani_def.binyan">
+                        <label>binyan</label><span class="def_block">{{content.word.info.simachtani_def.binyan}}</span></div>
+                    <div class="def_line def" ng-if="content.word.info.simachtani_def.shoresh">
+                        <label>shoresh</label><span class="def_block">{{content.word.info.simachtani_def.shoresh}}</span></div>
                 </div>
             </div>
-            <div ng-if="content.strongs_dict">
+            <div ng-if="content.word.info.strongs_def">
                 <h3>
                     Strong's Concordance:
                 </h3>
                 <div>
                     <md-divider xmd-inset></md-divider>
-                    <div class="def_line nikud rtl"><span class="title">{{content.strongs_dict.nikud}}</span><small>({{content.word.strongs_num}})</small></div>
-                    <div class="def_line pron" ng-if="content.strongs_dict.pronunciation">
-                        <label>pron.</label><span class="def_block">{{content.strongs_dict.pronunciation}}</span></div>
-                    <div class="def_line def" ng-if="content.strongs_dict.strongs_def">
-                        <label>def.</label><span class="def_block">{{content.strongs_dict.strongs_def}}</span></div>
-                    <div class="def_line def" ng-if="content.strongs_dict.strongs_def">
-                        <label>kjv.</label><span class="def_block">{{content.strongs_dict.kjv_def}}</span></div>
-                    <div class="def_line derivation" ng-if="content.strongs_dict.derivation" ng-click="content.hlink_click($event)">
-                        <label>root.</label><span class="def_block">{{content.strongs_dict.derivation}}</span></div>
+                    <div class="def_line nikud rtl"><span class="title">{{content.word.info.strongs_def.nikud}}</span><small>({{content.word.strongs_num}})</small></div>
+                    <div class="def_line pron" ng-if="content.word.info.strongs_def.pronunciation">
+                        <label>pron.</label><span class="def_block">{{content.word.info.strongs_def.pronunciation}}</span></div>
+                    <div class="def_line def" ng-if="content.word.info.strongs_def.strongs_def">
+                        <label>def.</label><span class="def_block">{{content.word.info.strongs_def.strongs_def}}</span></div>
+                    <div class="def_line def" ng-if="content.word.info.strongs_def.strongs_def">
+                        <label>kjv.</label><span class="def_block">{{content.word.info.strongs_def.kjv_def}}</span></div>
+                    <div class="def_line derivation" ng-if="content.word.info.strongs_def.derivation" ng-click="content.hlink_click($event)">
+                        <label>root.</label><span class="def_block">{{content.word.info.strongs_def.derivation}}</span></div>
                 </div>
             </div>
-            <div ng-if="content.word_forms.length">
+            <div ng-if="content.word.info.wordforms.length">
                 <h3>
                 Forms:
                 </h3>
                 <md-divider></md-divider>
                 <div class="word_forms rtl" ng-click="content.word_click($event, $index)">
-                    <span class="he-word" ng-repeat="word_form in content.word_forms">{{word_form.nikud}}</span>
+                    <span class="he-word" ng-repeat="word_form in content.word.info.wordforms">{{word_form.nikud}}</span>
                 </div>
                 <md-divider></md-divider>
             </div>
-            <div ng-if="content.concordance.length">
+            <div ng-if="content.word.info.verses.length">
                 <h3>
                 Word found in:
             </h3>
                 <md-divider></md-divider>
                 <div class="definitions concordance">
                     <div class="def_line def he-word"
-                         ng-repeat="inst in content.concordance"
+                         ng-repeat="inst in content.word.info.verses"
                          ng-click="content.selected_book=inst.book;content.selected_chapter=inst.chapter;content.selected_verse=inst.verse;">
                         <div style="display:inline-block;">{{inst.book}}:<span class="rtl font-aleph">{{inst.book_he}}</span></div>
                         {{inst.chapter+1}}:{{inst.verse+1}}
