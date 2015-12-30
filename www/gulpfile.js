@@ -47,10 +47,7 @@ gulp.task('scripts', function () {
       mangle: false,
       compress: {
         negate_iife: false
-      },
-      //output: {
-      //  source_map: true
-      // }
+      }
     }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./dist/'))
