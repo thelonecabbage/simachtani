@@ -24,9 +24,9 @@
     - name: install dependencies into virtualenv
       action: pip requirements={{webapps_dir}}/{{app_name}}/src/requirements.txt virtualenv={{webapps_dir}}/{{app_name}}/venv state=present
 
-    # - name: bower package dependencies
-    #   bower: path={{webapps_dir}}/{{app_name}}/src/www state=present
-    #   sudo: False
+    - name: bower package dependencies
+      bower: path={{webapps_dir}}/{{app_name}}/src/www state=present
+      sudo: False
 
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/{{app_name}}.ini
